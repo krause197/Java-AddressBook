@@ -13,9 +13,9 @@ public class EntryTest {
   public void tearDown() {
     try(Connection con = DB.sql2o.open()) {
       String deleteEntriesQuery = "DELETE FROM entry *;";
-      // String deleteContactQuery = "DELETE FROM contact *;";
+      String deleteContactQuery = "DELETE FROM contact *;";
       con.createQuery(deleteEntriesQuery).executeUpdate();
-      // con.createQuery(deleteContactQuery).executeUpdate();
+      con.createQuery(deleteContactQuery).executeUpdate();
     }
   }
 
@@ -57,58 +57,53 @@ public class EntryTest {
     assertEquals(myEntry.getId(), savedEntry.getId());
   }
 
-    @Test
-    public void equals_returnsTrueIfDescriptionsAretheSame() {
-      Entry firstEntry = new Entry("", "", "");
-      Entry secondEntry = new Entry("", "", "");
-      assertTrue(firstEntry.equals(secondEntry));
-    }
-}
+  @Test
+  public void equals_returnsTrueIfDescriptionsAretheSame() {
+    Entry firstEntry = new Entry("", "", "");
+    Entry secondEntry = new Entry("", "", "");
+    assertTrue(firstEntry.equals(secondEntry));
+  }
 
-//
+  @Test
+  public void save_returnsTrueIfDescriptionsAreTheSame() {
+    Entry myEntry = new Entry("", "", "");
+    myEntry.save();
+    assertTrue(Entry.all().get(0).equals(myEntry));
+  }
 
-//
-//   @Test
-//   public void save_returnsTrueIfDescriptionsAreTheSame() {
-//     Task myTask = new Task("mow the lawn", 1);
-//     myTask.save();
-//     assertTrue(Task.all().get(0).equals(myTask));
-//   }
-//
-//   @Test
-//   public void all_returnsAllInstancesOfTask_true() {
-//     Task firstTask = new Task("Mow the lawn", 1);
-//     firstTask.save();
-//     Task secondTask = new Task("Buy groceries", 1);
-//     secondTask.save();
-//     assertEquals(true, Task.all().contains(firstTask));
-//     assertEquals(true, Task.all().contains(secondTask));
-//   }
-//
-//   @Test
-//   public void getId_tasksInstantiateWithAnID_1() {
-//     Task myTask = new Task("Mow the lawn", 1);
-//     myTask.save();
-//     assertTrue(myTask.getId() > 0);
-//   }
-//
-//   @Test
-//   public void find_returnsTaskWithSameId_secondTask() {
-//     Task firstTask = new Task("Mow the lawn", 1);
-//     firstTask.save();
-//     Task secondTask = new Task("Buy groceries", 1);
-//     secondTask.save();
-//     assertEquals(Task.find(secondTask.getId()), secondTask);
-//   }
-//
-//   @Test
-//   public void save_savesCategoryIdIntoDB_true() {
-//     Category myCategory = new Category("Household chores");
-//     myCategory.save();
-//     Task myTask = new Task("Mow the lawn", myCategory.getId());
-//     myTask.save();
-//     Task savedTask = Task.find(myTask.getId());
-//     assertEquals(savedTask.getCategoryId(), myCategory.getId());
-//   }
-//
+  @Test
+  public void all_returnsAllInstancesOfEntry_true() {
+    Entry firstEntry = new Entry("", "", "");
+    firstEntry.save();
+    Entry secondEntry = new Entry("", "", "");
+    secondEntry.save();
+    assertEquals(true, Entry.all().contains(firstEntry));
+    assertEquals(true, Entry.all().contains(secondEntry));
+  }
+
+  @Test
+  public void getId_entriesInstantiateWithAnID_0() {
+    Entry myEntry = new Entry("", "", "");
+    myEntry.save();
+    assertTrue(myEntry.getId() > 0);
+  }
+
+// @Test
+// public void find_returnsEntryWithSameId_secondEntry() {
+//   Entry firstEntry = new Entry("", "", "");
+//   firstEntry.save();
+//   Entry secondEntry = new Entry("", "", "");
+//   secondEntry.save();
+//   assertEquals(Entry.find(secondEntry.getId()), secondEntry);
 // }
+
+//   @Test
+//   public void save_savesContactIdIntoDB_true() {
+//     Contact myContact = new Contact("Household chores");
+//     myContact.save();
+//     Entry myEntry = new Entry("Mow the lawn", myContact.getId());
+//     myEntry.save();
+//     Entry savedEntry = Entry.find(myEntry.getId());
+//     assertEquals(savedEntry.getContactId(), myContact.getId());
+//   }
+}
