@@ -5,23 +5,17 @@ import org.sql2o.*;
 
 
 public class Entry {
-  private String name;
   private String phone_number;
   private String mailing_address;
   private String email_address;
   private int id;
-  private int categoryId;
+  // private int categoryId;
 
-  public Entry(String name, String phone_number, String mailing_address, String email_address, int categoryId) {
-    this.name = name;
+  public Entry(String phone_number, String mailing_address, String email_address) {
     this.phone_number = phone_number;
     this.mailing_address = mailing_address;
     this.email_address = email_address;
-    this.categoryId = categoryId;
-  }
-
-  public String getName() {
-    return name;
+    // this.categoryId = categoryId;
   }
 
   public String getPhoneNumber() {
@@ -39,9 +33,40 @@ public class Entry {
   public int getId() {
     return id;
   }
+  //
+  // public int getCategoryId() {
+  //   return categoryId;
+  // }
 
-  public int getCategoryId() {
-    return categoryId;
+  public static Entry find(int id) {
+    String sql = "SELECT id FROM entry;";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetchFirst(Entry.class);
+    }
+  }
+
+  public void save() {
+    try(Connection con= DB.sql2o.open()) {
+      String sql = "INSERT INTO entry (phone_number, mailing_address, email_address) VALUES (:phone_number, :mailing_address, :email_address);";
+      this.id = (int) con.createQuery(sql, true).addParameter("phone_number", this.phone_number).addParameter("mailing_address", this.mailing_address).addParameter("email_address", this.email_address).executeUpdate().getKey();
+    }
+  }
+
+  public static List<Entry> all() {
+    String sql = "SELECT phone_number, mailing_address, email_address, id FROM entry;";
+    try(Connection con= DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetch(Entry.class);
+    }
+  }
+
+  @Override
+  public boolean equals(Object otherEntry) {
+    if (!(otherEntry instanceof Entry)) {
+      return false;
+    } else {
+      Entry newEntry = (Entry) otherEntry;
+      return this.getId() == newEntry.getId();
+    }
   }
 
 }

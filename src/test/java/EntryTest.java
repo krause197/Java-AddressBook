@@ -4,75 +4,69 @@ import java.time.LocalDateTime;
 import org.sql2o.*;
 
 public class EntryTest {
-  // @Before
-  // public void setUp() {
-  //   DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/to_do_test", null, null);
-  // }
-  //
-  // @After
-  // public void tearDown() {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String deleteEntriesQuery = "DELETE FROM entry *;";
-  //     String deleteContactQuery = "DELETE FROM contact *;";
-  //     con.createQuery(deleteEntriesQuery).executeUpdate();
-  //     // con.createQuery(deleteContactQuery).executeUpdate();
-  //   }
-  // }
+  @Before
+  public void setUp() {
+    DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/addressbook_test", null, null);
+  }
+
+  @After
+  public void tearDown() {
+    try(Connection con = DB.sql2o.open()) {
+      String deleteEntriesQuery = "DELETE FROM entry *;";
+      // String deleteContactQuery = "DELETE FROM contact *;";
+      con.createQuery(deleteEntriesQuery).executeUpdate();
+      // con.createQuery(deleteContactQuery).executeUpdate();
+    }
+  }
 
   @Test
   public void Entry_instantiatesCorrectly_true() {
-    Entry myEntry = new Entry("Name", "Phone", "Mailing", "String", 1);
+    Entry myEntry = new Entry("Phone", "Mailing", "String");
     assertEquals(true, myEntry instanceof Entry);
   }
 
   @Test
-  public void Entry_instantiatesWithName_String() {
-    Entry myEntry = new Entry("Name", "Phone", "Mailing", "String", 1);
-    assertEquals("Name", myEntry.getName());
-  }
-
-  @Test
   public void Entry_instantiatesWithPhoneNumber_String() {
-    Entry myEntry = new Entry("Name", "Phone", "Mailing", "String", 1);
+    Entry myEntry = new Entry("Phone", "Mailing", "String");
     assertEquals("Phone", myEntry.getPhoneNumber());
   }
 
   @Test
   public void Entry_instantiatesWithMailingAddress_String() {
-    Entry myEntry = new Entry("Name", "Phone", "Mailing", "String", 1);
+    Entry myEntry = new Entry("Phone", "Mailing", "String");
     assertEquals("Mailing", myEntry.getMailingAddress());
   }
 
   @Test
   public void Entry_instantiatesWithEmailAddress_String() {
-    Entry myEntry = new Entry("Name", "Phone", "Mailing", "Email", 1);
+    Entry myEntry = new Entry("Phone", "Mailing", "Email");
     assertEquals("Email", myEntry.getEmailAddress());
   }
 
+  // @Test
+  // public void Entry_instantiatesWithID_int() {
+  //   Entry myEntry = new Entry("Phone", "Mailing", "String");
+  //   assertEquals(1, myEntry.getCategoryId());
+  // }
+
   @Test
-  public void Entry_instantiatesWithID_int() {
-    Entry myEntry = new Entry("Name", "Phone", "Mailing", "String", 1);
-    assertEquals(1, myEntry.getCategoryId());
+  public void save_assignsIdToObject() {
+    Entry myEntry = new Entry("", "", "");
+    myEntry.save();
+    Entry savedEntry = Entry.all().get(0);
+    assertEquals(myEntry.getId(), savedEntry.getId());
   }
 
-  
+    @Test
+    public void equals_returnsTrueIfDescriptionsAretheSame() {
+      Entry firstEntry = new Entry("", "", "");
+      Entry secondEntry = new Entry("", "", "");
+      assertTrue(firstEntry.equals(secondEntry));
+    }
 }
 
 //
-//   @Test
-//   public void save_assignsIdToObject() {
-//     Task myTask = new Task("Mow the lawn", 1);
-//     myTask.save();
-//     Task savedTask = Task.all().get(0);
-//     assertEquals(myTask.getId(), savedTask.getId());
-//   }
-//
-//   @Test
-//   public void equals_returnsTrueIfDescriptionsAretheSame() {
-//     Task firstTask = new Task("Mow the lawn", 1);
-//     Task secondTask = new Task("Mow the lawn", 1);
-//     assertTrue(firstTask.equals(secondTask));
-//   }
+
 //
 //   @Test
 //   public void save_returnsTrueIfDescriptionsAreTheSame() {
